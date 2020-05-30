@@ -1,0 +1,188 @@
+DIMENS    -- dimensions of the model
+-- NX    NY   NZ
+   40   40    1/
+
+-- specify the phases present
+OIL       -- we run basically two phase black oil here
+WATER
+
+FIELD      -- unit specification
+
+START     -- starting date for simulation run
+  1 'JAN' 2009  /
+
+-- some other sizes and dimensions necessary for memory allocation:
+EQLDIMS   -- equilibration table size 
+    1  1000   10    1   20 /
+    
+TABDIMS   -- size of saturation and pvt tables
+    1    1   40   40 /
+
+WELLDIMS  -- max numb of WELLS|CONN per WELL|GROUPS|WELLperGROUP
+    5    20   2    4 /	
+
+WSEGDIMS
+-- #MULTISEGWELLS MAX.SEGS MAXSEGPERBRANCH
+ 1              70             20 /
+
+ACTDIMS
+20/
+
+--NSTACK
+--   30 /
+
+UNIFOUT
+
+GRID      == geometry of our model =====================================
+EQUALS    -- set top depth, block sizes and rock properties
+          -- valid for a given range of blocks: I1 I2   J1 J2   K1 K2   
+      'DX'    50   /                        -- default box => all blocks
+--      'PERMX' 100   /		
+      'DY'    50   / 
+      'PORO'   0.3 / 
+      'DZ'      15  / -- thickness of the layers
+      'TOPS'  8000      1   40  1   40  1   1 /  -- first layer      
+      / 
+
+
+
+INCLUDE
+'permx.dat'/
+
+
+COPY
+  PERMX PERMY/
+  PERMX PERMZ/
+/
+
+--MULTIPLY
+--	PERMZ 0.4/
+--/
+
+-- request init and grid file, necessary for post processing of the simulation
+-- with floviz
+INIT
+GRIDFILE
+ 2 /
+
+PROPS     == pvt and relperm tables =============================
+
+PVDO      -- pvt for live oil
+-- Pressure   	Bo	viscosity 
+     14.7      1.000        1.16
+     10000.0   0.999	    1.20/                            
+
+-- Rs remains constant after Pbub = 3824.32 psi at the PVTO table 
+
+PVTW   
+     14.7    1.0   2.68972E-06    0.325	0.00/
+    10000.0  1.0   3.10982E-06    0.325	0.00/
+     
+
+SWOF     -- oil-water Relative Permeabilities and Pcog
+--TABLE      Sw       KRw      KROw     PCow
+--	0.0      0.0       1.0		0	
+--     	0.1      0.0       0.960	0
+--	0.15	 0.0       0.915	0
+--	0.2      0.0       0.875	0
+      	0.15      0.000    1.000	0
+	   	0.20      0.029    0.838	0
+		0.26      0.069    0.644	0
+		0.30      0.096    0.540	0
+      	0.34      0.128    0.436	0
+      	0.40      0.175    0.326	0
+      	0.52      0.280    0.161	0
+      	0.60      0.368    0.086	0
+		0.62      0.390    0.069	0
+      	0.70      0.500    0.000	0
+      	1.00      0.500    0.000	0/
+
+ROCK       -- reference Pressure and rock compressibility
+        14.7    0.5E-5  
+/
+
+DENSITY   -- oil wat gas @surface(lbm/scf)
+        54.0  58.0
+/
+
+------!!! notice the oil-water contact face, and 
+SOLUTION   == initial state of solution variables =====================
+EQUIL      -- DATA FOR INITIALISING FLUIDS TO POTENTIAL EQUILIBRIUM
+--    DATUM  DATUM   OWC    OWC    GOC    GOC    RSVD   RVVD   SOLN
+--    DEPTH  PRESS  DEPTH   PCOW  DEPTH   PCOG  TABLE  TABLE   METH
+       8500  5080   9000    0     0.0    0      0      0       0
+/
+
+
+SUMMARY     ==============================================================
+Excel 
+Narrow 
+SEPARATE
+--
+FOPT
+FWPT
+FOPR
+FWPR
+FWCT
+FWIT
+FWIR
+FPR
+
+SOFR
+'PRODZ' 2/
+'PRODZ' 5/
+'PRODZ' 8/
+/
+
+SOFT
+'PRODZ' 2/
+'PRODZ' 5/
+'PRODZ' 8/
+/
+
+SWFR
+'PRODZ' 2/
+'PRODZ' 5/
+'PRODZ' 8/
+/
+
+SWFT
+'PRODZ' 2/
+'PRODZ' 5/
+'PRODZ' 8/
+/
+
+SWCT
+'PRODZ' 2/
+'PRODZ' 5/
+'PRODZ' 8/
+/
+
+SPRD
+'PRODZ' 2/
+'PRODZ' 5/
+'PRODZ' 8/
+/
+
+SFOPN
+'PRODZ' 2/
+'PRODZ' 5/
+'PRODZ' 8/
+/
+
+/
+
+SCHEDULE     ==============================================================
+
+WSEGITER
+2000 3000 0.1 3.0 /
+
+INCLUDE 
+'SIMWELLS.dat' / 
+
+-- timesteps can be refined by entering multiple TSTEP keywords       
+
+INCLUDE
+'SIMTIME.dat'/
+
+END
