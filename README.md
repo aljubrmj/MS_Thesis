@@ -53,7 +53,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 Name: [@MJAljubran](https://twitter.com/twitter_handle) - m.j.aljubran@gmail.com
 
-Project Link: [https://github.com/aljubrmj/ERE-251_PVT-Simulator](https://github.com/aljubrmj/MS_Thesis)
+Project Link: [https://github.com/aljubrmj/MS_Thesis](https://github.com/aljubrmj/MS_Thesis)
 
 
 
